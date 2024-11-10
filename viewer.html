@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vista de Imagen 360</title>
+    
+   
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css">
+
+    <style>
+        
+        #panorama {
+            width: 100%;  
+            height: 100vh;  
+            margin: 0;
+        }
+
+       
+        #nextButton {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+
+        #nextButton:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Imagen 360 - {{ image_path }}</h1>
+
+ 
+    <div id="panorama"></div>
+
+
+    <button id="nextButton" onclick="window.location.href='/course'">Siguiente</button>
+
+  
+    <script src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
+    <script>
+       
+        pannellum.viewer('panorama', {
+            "type": "equirectangular",  
+            "panorama": "/static/images/{{ image_path }}.jpg",  
+            "autoLoad": true,  
+            "showControls": true, 
+            "hfov": 100,  
+            "maxYaw": 180,  
+            "minYaw": -180,  
+            "pitch": 0,  
+            "yaw": 0,  
+            "sceneFadeDuration": 1000,  
+            "hotSpots": [] 
+        });
+    </script>
+</body>
+</html>

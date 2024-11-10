@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ curso }}</title>
+    <style>
+      
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            text-align: center;
+            padding: 20px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        h2 {
+            color: #333;
+            font-size: 2rem;
+        }
+
+        p {
+            color: #555;
+            font-size: 1.2rem;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 1.5rem;
+            color: #ff0000;
+        }
+
+        /* Botón de activar/desactivar cámara */
+        #toggleCameraButton {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 20px 0;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        #toggleCameraButton:hover {
+            background-color: #45a049;
+        }
+
+        /* Estilo para el video que ocupa toda la pantalla */
+        .fullscreen-video {
+            width: 100%;
+            height: 80%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Curso: {{ curso }}</h2>
+        <p>Escanea el código QR para acceder al aula.</p>
+
+        <!-- Botón para activar/desactivar la cámara -->
+        <button id="toggleCameraButton" onclick="toggleCamera()">Activar Cámara QR</button>
+
+        <!-- Aquí se muestra la cámara para escanear el QR -->
+        <video id="video" class="fullscreen-video" width="100%" height="100%" autoplay></video>
+        <canvas id="canvas" width="100%" height="100%" style="display: none;"></canvas>
+        <p id="result">Esperando código QR...</p>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const context = canvas.getContext('2d');
+        const resultElement = document.getElementById('result');
+        const toggleButton = document.getElementById('toggleCameraButton');
+        let cameraActive = false;
+
+        async function startCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+                video.srcObject = stream;
+                requestAnimationFrame(scanQRCode);
+            } catch (err) {
+                console.error("Error al acceder a la cámara:", err);
+            }
+        }
+
+        function stopCamera() {
+            const stream = video.srcObject;
+            if (stream) {
+                const tracks = stream.getTracks();
+                tracks.forEach(track => track.stop());
+            }
+            video.srcObject = null;
+        }
+
+        function scanQRCode() {
+            if (!cameraActive) return;
+
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+            const code = jsQR(imageData.data, canvas.width, canvas.height, { inversionAttempts: 'dontInvert' });
+
+            if (code) {
+                resultElement.textContent = `Código QR detectado: ${code.data}`;
+                stopCamera(); // Detener la cámara después de detectar el QR
+                // Aquí podrías procesar el código QR, por ejemplo, enviarlo al servidor
+                window.location.href = `/viewer?image_path=${encodeURIComponent(code.data)}`;
+            } else {
+                resultElement.textContent = "Escaneando...";
+                requestAnimationFrame(scanQRCode);
+            }
+        }
+
+        function toggleCamera() {
+            if (cameraActive) {
+                stopCamera();
+                toggleButton.textContent = 'Activar Cámara QR';
+            } else {
+                startCamera();
+                toggleButton.textContent = 'Desactivar Cámara QR';
+            }
+            cameraActive = !cameraActive;
+        }
+    </script>
+</body>
+</html>

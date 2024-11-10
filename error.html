@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Error!</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 50px;
+        }
+        h2 {
+            color: #ff0000;
+        }
+        p {
+            color: #555;
+            font-size: 1.2rem;
+        }
+        .button {
+            padding: 10px 20px;
+            font-size: 1.2em;
+            background-color: #0069b4;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .button:hover {
+            background-color: #0056a0;
+        }
+    </style>
+</head>
+<body>
+    <h2>¡Ha ocurrido un error!</h2>
+    <p>{{ error_message }}</p>
+    <button class="button" onclick="window.location.href='/login'">Regresar al inicio</button>
+</body>
+</html>

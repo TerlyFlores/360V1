@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrar UTP360</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #f1f1f1;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+        }
+
+        h2 {
+            color: #0069b4;
+        }
+
+        .images-list {
+            margin-top: 20px;
+        }
+
+        .image-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 10px;
+            gap: 5px;
+            text-align: center;
+        }
+
+        .image-item img {
+            width: 100px;
+            height: auto;
+        }
+
+        .button {
+            padding: 10px 20px;
+            font-size: 1em;
+            background-color: #0069b4;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background-color: #0056a0;
+        }
+
+        .form-container {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Administrar UTP360</h2>
+    
+    <div class="images-list">
+        {% for image in imagenes %}
+            <div class="image-item">
+              
+                <p>{{ image }}</p>
+                <img src="{{ url_for('static', filename='images/' + image) }}" alt="{{ image }}">
+                
+             
+                <form method="POST" action="{{ url_for('delete_image') }}">
+                    <input type="hidden" name="image_name" value="{{ image }}">
+                    <button type="submit" class="button">Eliminar</button>
+                </form>
+                <form method="POST" action="{{ url_for('rename_image') }}">
+                    <input type="hidden" name="old_name" value="{{ image }}">
+                    <input type="text" name="new_name" placeholder="Nuevo nombre" required>
+                    <button type="submit" class="button">Renombrar</button>
+                </form>
+            </div>
+        {% endfor %}
+    </div>
+    
+    <div class="form-container">
+        <h3>Subir Nueva Imagen</h3>
+        <form method="POST" action="{{ url_for('upload_image') }}" enctype="multipart/form-data">
+            <input type="file" name="image" accept=".jpg" required>
+            <button type="submit" class="button">Subir Imagen</button>
+        </form>
+    </div>
+</body>
+</html>

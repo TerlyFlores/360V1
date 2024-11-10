@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Aplicación UTP 360{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="{{ url_for('static', filename='js/scripts.js') }}" defer></script>
+</head>
+<body>
+    <header>
+        <h1>Bienvenido a la plataforma UTP 360</h1>
+        <nav>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/admin_utp360">Administrar Imágenes 360</a>
+            <a href="/course">Cursos</a>
+            <form action="{{ url_for('logout') }}" method="POST">
+                <button type="submit">Cerrar Sesión</button>
+            </form>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}
+        
+        {% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2024 UTP 360. Todos los derechos reservados.</p>
+    </footer>
+</body>
+</html>
